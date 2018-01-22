@@ -7,7 +7,7 @@
 
 import socket
 import time
-import imageio
+# import imageio
 import sys,os
 
 
