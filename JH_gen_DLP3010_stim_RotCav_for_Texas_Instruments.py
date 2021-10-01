@@ -13,8 +13,8 @@ def gen_RotCav_stim(compress_flag = 1, output_fps = 360, debug_text = 1):
 	h=720
 	w=1280
 	fps = output_fps 
-	rps = 2 		### Unit: cycle per second 	### frequency: 3 cycles for intracellular stim (Krapp 1997)
-	duration = 4.5 	### Unit: second 			### sequence: 0.5s null + 1.5s CW + 0.5s null + 1.5s CCW + 0.5s null
+	rps = 2 	### Unit: cycle per second 	### frequency: 2 cycle per second for intracellular stim (Krapp 1997)
+	duration = 4.5 	### Unit: second 		### sequence: 0.5s null + 1.5s CW + 0.5s null + 1.5s CCW + 0.5s null
 
 	fourcc=0
 	if compress_flag == 1:
@@ -99,7 +99,7 @@ def gen_RotCav_stim(compress_flag = 1, output_fps = 360, debug_text = 1):
 
 #########################################
 
-def encode_DLP_stim(compress_flag = 1):
+def encode_DLP_stim(compress_flag = 1, output_fps = 360):
 	cap = cv2.VideoCapture('.\\stim.avi')
 	if not cap.isOpened(): 
 	    print( "could not open :",fn)
@@ -114,8 +114,6 @@ def encode_DLP_stim(compress_flag = 1):
 	print('total frame =',Total_Frame_Count)
 	print('input_fps =',input_fps)
 
-	output_fps = 120
-
 	fourcc=0
 	if compress_flag == 1:
 		fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
@@ -128,7 +126,7 @@ def encode_DLP_stim(compress_flag = 1):
 
 		DLP_frame = np.zeros((h,w,3), np.uint8)
 
-		if input_fps == 360 and output_fps==120 :
+		if (input_fps != 0) :
 			cap.set(1,i)
 			ret,frame1 = cap.read()
 			cap.set(1,i+1)
@@ -180,10 +178,14 @@ def encode_DLP_stim(compress_flag = 1):
 
 if __name__ == "__main__":
 
+	# fps = 360 		# tested: 8-bit mode, generates unwanted 360Hz flickers
+	fps = int(104.2 * 3) 	# test not finished yet
+	print('[INFO] The output fps is:', fps)
+
 	print('[INFO] Stage 1: Generating raw video stimulus...')
-	gen_RotCav_stim()
+	gen_RotCav_stim(output_fps = fps)
 
 	print('[INFO] Stage 2: Encoding raw video stimulus to DLP format...')
-	encode_DLP_stim()
+	encode_DLP_stim(output_fps = fps)
 
 	print('[OVER] Programme end.')
