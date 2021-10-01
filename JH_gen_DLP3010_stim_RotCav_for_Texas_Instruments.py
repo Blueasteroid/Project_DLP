@@ -2,6 +2,7 @@
 # JH@KrappLab
 # 2018-01-25 for DLP3000
 # 2020-02-20 for DLP3010
+# 2021-10-01 for discussion with TI
 #########################################
 import cv2
 import numpy as np
